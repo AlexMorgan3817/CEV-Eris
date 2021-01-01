@@ -16,7 +16,7 @@
 /atom/proc/ShowCyberSpaceAvatar(client/C)
 	C.images |= CyberspaceAvatar
 
-/atom/LateInitialize()
+/atom/Initialize()
 	. = ..()
 	if(CyberspaceAvatar)
 		UpdateCyberSpaceAvatar()

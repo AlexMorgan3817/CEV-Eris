@@ -4,7 +4,7 @@
 	if(client)
 		client.UpdateCyberSpaceVision()
 
-/mob/LateInitialize()
+/mob/Initialize()
 	. = ..()
 	Set_SeeCyberSpace(SeeCyberSpace)
 
