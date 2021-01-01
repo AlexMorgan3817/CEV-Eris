@@ -850,11 +850,11 @@ proc
 			if(4)	I.pixel_y++
 		overlays += I//And finally add the overlay.
 
-/proc/getHologramIcon(icon/A, safety=1, var/hologram_opacity = 0.5, var/hologram_color)//If safety is on, a new icon is not created.
+/proc/getHologramIcon(icon/A, safety=1, var/hologram_opacity = 0.5, var/hologram_color, alphaMaskState = "scanline")//If safety is on, a new icon is not created.
 	var/icon/flat_icon = safety ? A : new(A)//Has to be a new icon to not constantly change the same icon.
-	flat_icon.ColorTone(hologram_color || rgb(125, 180, 225))//Let's make it bluish.
-	flat_icon.ChangeOpacity(hologram_opacity)//Make it half transparent.
-	var/icon/alpha_mask = new('icons/effects/effects.dmi', "scanline")//Scanline effect.
+	flat_icon.ColorTone(hologram_color || rgb(125, 180, 225))//Color it.
+	flat_icon.ChangeOpacity(hologram_opacity)//Make it transparent.
+	var/icon/alpha_mask = new('icons/effects/effects.dmi', alphaMaskState)
 	flat_icon.AddAlphaMask(alpha_mask)//Finally, let's mix in a distortion effect.
 	return flat_icon
 
