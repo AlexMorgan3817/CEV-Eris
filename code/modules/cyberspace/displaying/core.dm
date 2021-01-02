@@ -1,16 +1,17 @@
 /mob/var/SeeCyberSpace = FALSE //bool only
 /mob/proc/Set_SeeCyberSpace(value)
-	SeeCyberSpace = value
+	if(SeeCyberSpace != value)
+		SeeCyberSpace = value
+		UpdateCyberSpaceVision()
+
+/mob/proc/UpdateCyberSpaceVision()
 	if(client)
 		client.UpdateCyberSpaceVision()
 
-/mob/Initialize()
-	. = ..()
-	Set_SeeCyberSpace(SeeCyberSpace)
-
 /mob/Login()
 	. = ..()
-	Set_SeeCyberSpace(SeeCyberSpace)
+	if(client)
+		client.UpdateCyberSpaceVision()
 
 /mob/Move()
 	. = ..()
@@ -22,6 +23,5 @@
 			if(!isnum(view))
 				CRASH("Warning, View isn't number, cyberspace won't be displaying for [src](\ref[src]).")
 			SScyberspace.ShowAtomsTo(mob)
-			SScyberspace.CyberSpaceViewers |= mob
 		else
-			SScyberspace.CyberSpaceViewers -= mob
+			SScyberspace.HideAtomsFrom(mob)
