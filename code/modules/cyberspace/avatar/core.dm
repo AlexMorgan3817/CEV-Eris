@@ -48,3 +48,7 @@
 /atom/update_icon()
 	. = ..()
 	UpdateCyberSpaceAvatar()
+
+/mob/Move()
+	. = ..()
+	UpdateCyberSpaceAvatar()

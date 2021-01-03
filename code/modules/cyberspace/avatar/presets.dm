@@ -5,9 +5,14 @@ ADD_CYBERSPACE_AVATAR(/obj/machinery)
 */
 
 ADD_CYBERSPACE_AVATAR(/obj/item/modular_computer)
+ADD_CYBERSPACE_AVATAR(/obj/machinery/computer)
+ADD_CYBERSPACE_AVATAR(/obj/machinery/door/airlock)
 ADD_CYBERSPACE_AVATAR(/obj/machinery/camera)
 ADD_CYBERSPACE_AVATAR(/obj/machinery/power/apc)
 ADD_CYBERSPACE_AVATAR(/obj/machinery/power/smes)
+ADD_CYBERSPACE_AVATAR(/obj/item/device/radio/intercom)
+ADD_CYBERSPACE_AVATAR(/obj/machinery/turretid)
+ADD_CYBERSPACE_AVATAR(/obj/machinery/porta_turret)
 
 ADD_CYBERSPACE_AVATAR(/mob/living/silicon)
 ADD_CYBERSPACE_AVATAR(/mob/observer/eye/aiEye)
@@ -16,3 +21,7 @@ ADD_CYBERSPACE_AVATAR_CUSTOM_COLOR(/mob/living/carbon/human, CYBERSPACE_SHADOW_C
 
 ADD_CYBERSPACE_AVATAR_CUSTOM_COLOR(/mob/living/carbon/superior_animal/roach/nanite, "#00aa66")
 ADD_CYBERSPACE_AVATAR_CUSTOM_COLOR(/mob/living/carbon/superior_animal/roach/bluespace, "#0000aa")
+
+/*
+	Fuck... Somehow this shit kills MC...
+*/
