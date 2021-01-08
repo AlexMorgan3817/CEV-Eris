@@ -1,5 +1,5 @@
 /atom
-	var/image/CyberspaceAvatar = FALSE
+	var/datum/CyberspaceAvatar/CyberspaceAvatar = FALSE
 	var/CyberSpaceColor = CYBERSPACE_MAIN_COLOR
 
 /atom/proc/GetCyberSpaceAvatar(add = TRUE)
@@ -30,6 +30,7 @@
 /atom/Initialize()
 	. = ..()
 	if(CyberspaceAvatar)
+		CyberspaceAvatar = new(src)
 		SScyberspace.CyberSpaceAtoms |= src
 /*//what if we will init cyberavatar only when encounter it
 	if(CyberspaceAvatar)

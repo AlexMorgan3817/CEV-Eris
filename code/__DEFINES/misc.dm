@@ -262,6 +262,9 @@
 
 #define CLIENT_FROM_VAR(I) (ismob(I) ? I:client : (istype(I, /client) ? I : (istype(I, /datum/mind) ? I:current?:client : null)))
 
+#define CHECK_EQUAL(ins1, ins2, var) (##ins1.##var == ##ins2.##var)
+#define MAKE_EQUAL(ins1, ins2, var) (##ins1.##var = ##ins2.##var)
+#define MAKE_EQUAL_IF_NOT_EQUAL(ins1, ins2, var) if(!CHECK_EQUAL(##ins1, ##ins2, ##var)){MAKE_EQUAL(##ins1, ##ins2, ##var)}
 
 // Maploader bounds indices
 #define MAP_MINX 1
