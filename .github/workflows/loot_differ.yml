@@ -3,7 +3,7 @@ name: Compile Loot data diff
 on:
   workflow_dispatch:
   push:
-    branches: [master]
+    branches: [master, LootTestingWorkflow]
   pull_request:
     branches:
       - master
