@@ -8,7 +8,7 @@ on:
     branches:
       - master
 jobs:
-  Compile Loot Data Diff:
+  CompileLootDataDiff:
     runs-on: ubuntu-latest
 #Testing    if: github.repository == 'discordia-space/CEV-Eris'
     steps:
