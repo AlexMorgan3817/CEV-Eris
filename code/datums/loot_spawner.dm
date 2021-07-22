@@ -14,25 +14,23 @@
 ///datum/controller/subsystem/spawn_data/Initialize()
 //	..()
 //	generate_data()
-
+#ifndef LOOT_FILE_DIR
+	#define LOOT_FILE_DIR "data/loot_data"
+#else
+	#warn LOOT_FILE_DIR overriden.
+#endif
 /datum/controller/subsystem/spawn_data/proc/generate_data()
 	var/list/paths = list()
-	//spawn vars
-	//var/rarity
-	//var/frequency
-	//var/blacklisted
-	//var/list/bad_paths = list()
+
 	var/list/spawn_tags = list()
 	var/list/accompanying_objs = list()
-	var/generate_files = config.generate_loot_data
-	var/file_dir = "strings/loot_data"
-	var/source_dir = file("[file_dir]/")
-	var/loot_data = file("[file_dir]/all_spawn_data.txt")
-	var/loot_data_paths = file("[file_dir]/all_spawn_paths.txt")
-	var/hard_blacklist_data = file("[file_dir]/hard_blacklist.txt")
-	var/blacklist_paths_data = file("[file_dir]/blacklist.txt")
-	var/file_dir_tags = "[file_dir]/tags/"
-	if(generate_files)
+	var/source_dir = file("[LOOT_FILE_DIR]/")
+	var/loot_data = file("[LOOT_FILE_DIR]/all_spawn_data.txt")
+	var/loot_data_paths = file("[LOOT_FILE_DIR]/all_spawn_paths.txt")
+	var/hard_blacklist_data = file("[LOOT_FILE_DIR]/hard_blacklist.txt")
+	var/blacklist_paths_data = file("[LOOT_FILE_DIR]/blacklist.txt")
+	var/LOOT_FILE_DIR_tags = "[LOOT_FILE_DIR]/tags/"
+	if(config.generate_loot_data)
 		fdel(source_dir)
 		loot_data  << "paths    spawn_tags    blacklisted    spawn_value    spawn_price    prob_accompanying_obj    all_accompanying_obj"
 
@@ -47,19 +45,19 @@
 	for(var/path in paths)
 		var/atom/movable/A = path
 		if(path == initial(A.bad_type))
-			if(generate_files)
+			if(config.generate_loot_data)
 				hard_blacklist_data  << "[path]"
 			continue
 
 		spawn_tags = params2list(initial(A.spawn_tags))
 		if(!spawn_tags.len)
-			if(generate_files)
+			if(config.generate_loot_data)
 				hard_blacklist_data  << "[path]"
 			continue
 
 		//frequency = initial(A.spawn_frequency)
 		if(initial(A.spawn_frequency) <= 0)
-			if(generate_files)
+			if(config.generate_loot_data)
 				hard_blacklist_data  << "[path]"
 			continue
 
@@ -76,7 +74,7 @@
 						icon_check = TRUE
 						break
 		if(!icon_check)
-			if(generate_files)
+			if(config.generate_loot_data)
 				hard_blacklist_data  << "[path]"
 			continue
 		*/ //this works but is unnecessary for now.
@@ -128,22 +126,22 @@
 
 		//tags//
 		/*
-		if(generate_files && ispath(path, /obj/item/weapon/gun))
+		if(config.generate_loot_data && ispath(path, /obj/item/weapon/gun))
 			var/tag_data_i
 			if(price > GUN_CHEAP_PRICE)
-				tag_data_i = file("[file_dir_tags]gun_expensive.txt")
+				tag_data_i = file("[LOOT_FILE_DIR_tags]gun_expensive.txt")
 			else
-				tag_data_i = file("[file_dir_tags]gun_cheap.txt")
+				tag_data_i = file("[LOOT_FILE_DIR_tags]gun_cheap.txt")
 			tag_data_i  << "[path]    blacklisted=[initial(A.spawn_blacklisted)]    spawn_value=[spawn_value]   spawn_price=[price]   prob_accompanying_obj=[initial(A.prob_aditional_object)]    accompanying_objs=[all_accompanying_obj_by_path[path] ? english_list(all_accompanying_obj_by_path[path], "nothing", ",") : "nothing"]"
 		*/
 		for(var/tag in spawn_tags)
 			all_spawn_by_tag[tag] += list(path)
 			if(ispath(path, /obj/item) && tag != SPAWN_OBJ &&!initial(A.density) && ISINRANGE(price, 1, CHEAP_ITEM_PRICE) && !lowkeyrandom_tags.Find(tag))
 				lowkeyrandom_tags += list(tag)
-			if(generate_files)
-				var/tag_data_i = file("[file_dir_tags][tag].txt")
+			if(config.generate_loot_data)
+				var/tag_data_i = file("[LOOT_FILE_DIR_tags][tag].txt")
 				tag_data_i << "[path]    blacklisted=[initial(A.spawn_blacklisted)]    spawn_value=[spawn_value]   spawn_price=[price]   prob_accompanying_obj=[initial(A.prob_aditional_object)]    accompanying_objs=[all_accompanying_obj_by_path[path] ? english_list(all_accompanying_obj_by_path[path], "nothing", ",") : "nothing"]"
-		if(generate_files)
+		if(config.generate_loot_data)
 			loot_data << "[path]    [initial(A.spawn_tags)]    blacklisted=[initial(A.spawn_blacklisted)]    spawn_value=[spawn_value]   spawn_price=[price]   prob_accompanying_obj=[initial(A.prob_aditional_object)]    accompanying_objs=[all_accompanying_obj_by_path[path] ? english_list(all_accompanying_obj_by_path[path], "nothing", ",") : "nothing"]"
 			loot_data_paths << "[path]"
 			if(initial(A.spawn_blacklisted))
@@ -428,9 +426,8 @@ the value of stock parts increases with the rating.
 
 /* this proc generates a rarity value depending on the armor.
 /obj/item/clothing/proc/generate_loot_data()
-	var/file_dir = "strings/cloth_data"
-	var/loot_data = file("[file_dir]/cloth_data.txt")
-	var/pure_data = file("[file_dir]/pure_data.txt")
+	var/loot_data = file("[LOOT_FILE_DIR]/cloth_data/cloth_data.txt")
+	var/pure_data = file("[LOOT_FILE_DIR]/cloth_data/pure_data.txt")
 
 	fdel(loot_data)
 	fdel(pure_data)

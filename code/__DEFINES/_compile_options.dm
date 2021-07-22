@@ -3,3 +3,5 @@
 
 #define ZLEVELS	// Enables multi-z support in ZAS, comment out to disable it
 
+
+#define LOOT_FILE_DIR "data/old_loot_data"

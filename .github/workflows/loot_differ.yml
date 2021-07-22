@@ -1,0 +1,53 @@
+name: Compile Loot data diff
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+  pull_request:
+    branches:
+      - master
+jobs:
+  Compile Loot Data Diff:
+    runs-on: ubuntu-latest
+#Testing    if: github.repository == 'discordia-space/CEV-Eris'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 25
+
+      - name: Config Setup
+        run: |
+          cp config/example/* config/
+          printf "\nGENERATE_LOOT_DATA" >> config/config.txt
+
+          git config --local user.email "action@github.com"
+          git config --local user.name "Drunk Vagabond"
+
+      - name: Compile new version
+        run: DreamMaker cev_eris.dme
+      - name: Run build for current loot data
+        run: |
+          DreamDaemon cev_eris.dmb
+
+          loops = 0
+          while[ !-d data/loot_data/ && $loops -lt 8 ]
+          do
+            sleep 30
+            let loops++
+          done
+          killall DreamDaemon
+
+      - name: Revert last commit
+        run: git revert HEAD@{0}
+
+      - name: Prepare loot data directory
+        run: printf "\n#define LOOT_FILE_DIR \"data/old_loot_data\"" >> code/__DEFINES/_compile_options.dm
+      - name: Compile old version
+        run: DreamMaker cev_eris.dme -clean
+      - name: Run old build for old loot data
+        run: DreamDaemon cev_eris.dme
+
+      - name: Loot Data Diff
+        run: git diff --no-index data/old_loot_data/ data/loot_data/
