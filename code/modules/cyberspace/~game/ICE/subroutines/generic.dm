@@ -8,7 +8,7 @@
 	var/mob/observer/cyber_entity/user = host.Owner
 	var/mob/observer/cyber_entity/T = triggerer.Owner
 	if(T)
-		. = T.ChangeHP(0, -user.Might)
+		. = T.HandleCyberAttack(-user.Might, user)
 		..()
 
 /datum/subroutine/damageBrain

@@ -31,6 +31,10 @@
 /mob/observer/cyber_entity/IceHolder/Death()
 	AI_on = FALSE
 	stance = ICE_STANCE_DEAD
+	if(istype(last_attacker, /mob/observer/cyber_entity/cyberspace_eye))
+		RaiseAlarmLevelInArea()
+	if(istype(MyFirewall))
+		MyFirewall.MyIces -= src
 	. = ..()
 
 /mob/observer/cyber_entity/IceHolder/proc/check_AI_act()

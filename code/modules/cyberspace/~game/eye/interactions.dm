@@ -26,13 +26,15 @@
 		else
 			to_chat(user, SPAN_WARNING("Fixing failed."))
 			return
-	return Owner.attack_ai(user)//Owner.ui_interact(user, state = GLOB.netrunner_state)
+	if(AbleToInteract(user))
+		return Owner.attack_ai(user)//Owner.ui_interact(user, state = GLOB.netrunner_state)
 
 /datum/CyberSpaceAvatar/proc/HurtInteraction(mob/observer/cyber_entity/user, datum/CyberSpaceAvatar/user_avatar, params)
 	var/mob/observer/cyber_entity/O = Owner
 	if(istype(O, /mob/observer/cyber_entity) && get_dist(user, O) <= user.attack_range)
 		to_chat(user, "You have attacked \the [O].")
-		return O.ChangeHP(0, -user.Might)
+		O.last_attacker = user
+		return O.HandleCyberAttack(-user.Might, user)
 
 /datum/CyberSpaceAvatar/proc/GrabInteraction(mob/observer/cyber_entity/user, datum/CyberSpaceAvatar/user_avatar, params)
 	if(!user_avatar || !user)

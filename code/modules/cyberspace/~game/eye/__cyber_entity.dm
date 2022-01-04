@@ -28,6 +28,7 @@ CYBERAVATAR_CUSTOM_TYPE(/mob/observer/cyber_entity/cyberspace_eye, /datum/CyberS
 
 	var/DeleteTime = 5 MINUTES
 	var/tmp/delete_timer
+	var/tmp/mob/observer/cyber_entity/last_attacker
 
 	var/list/init_subroutines = list()
 
@@ -55,6 +56,10 @@ CYBERAVATAR_CUSTOM_TYPE(/mob/observer/cyber_entity/cyberspace_eye, /datum/CyberS
 	. = HP
 	SetHP(clamp(HP + amount, 0, maxHP))
 	. = HP - .
+
+/mob/observer/cyber_entity/proc/HandleCyberAttack(damage = null, mob/observer/cyber_entity/user) //Returns successful delta
+	last_attacker = user
+	return ChangeHP(0, damage)
 
 /mob/observer/cyber_entity/proc/SetHP(value = maxHP)
 	HP = value

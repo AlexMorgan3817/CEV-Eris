@@ -18,11 +18,36 @@
 		/mob/observer/cyber_entity/IceHolder/spearman
 	)
 
+	var/list/MyIces = list()
+
+	var/tmp/list/recentEnterers = list()
+	var/entererDeleteTime = 3 SECONDS
+
+/area/Entered(atom/movable/Obj,atom/OldLoc)
+	. = ..()
+	var/obj/machinery/power/apc/A = locate(/obj/machinery/power/apc) in src
+	if(A)
+		A.SomeOneEnteredArea(Obj)
+
+/obj/machinery/power/apc/proc/SomeOneEnteredArea(atom/movable/someone)
+	if(istype(CyberAvatar) && istype(someone, /mob/observer/cyber_entity/cyberspace_eye))
+		var/mob/observer/cyber_entity/cyberspace_eye/E = someone
+		to_world("[E]")
+		if(!CheckCyberAccess(E) && !(E in recentEnterers))
+			RaiseAlarmLevel(DefaultLevelDelta)
+			recentEnterers.Add(E)
+			addtimer(CALLBACK(src, .proc/RemoveFromRecentEnterers, E), entererDeleteTime)
+/obj/machinery/power/apc/proc/RemoveFromRecentEnterers(mob/E)
+	to_world(json_encode(recentEnterers))
+	recentEnterers -= E
+	to_world(json_encode(recentEnterers))
 /obj/machinery/power/apc/Process(wait)
 	. = ..()
-	RaiseAlarmLevel(-DefaultLevelDelta / 10) //8 minutes 20 seconds is default time of lowing alarm level to zero
+	RaiseAlarmLevel(-DefaultLevelDelta * wait) //0.1 per second
 
 /obj/machinery/power/apc/proc/RaiseAlarmLevel(value = DefaultLevelDelta)
+	if(value <= 0)
+		return
 	var/old_value = FLOOR(CyberAlarmLevel, 1)
 	CyberAlarmLevel += value
 	var/current = FLOOR(CyberAlarmLevel, 1)
@@ -35,6 +60,7 @@
 				TriggerAlarmLevelEffect(AlarmLevelsToProcs[l])
 			else
 				TriggerAlarmLevelEffect("[old_value + i]")
+		return delta
 
 /obj/machinery/power/apc/proc/TriggerAlarmLevelEffect(textLevel)
 	if(textLevel in AlarmLevelsToProcs)
@@ -73,6 +99,7 @@
 /obj/machinery/power/apc/proc/CreateICE(mob/observer/cyber_entity/IceHolder/prefab, turf/where)
 	var/mob/observer/cyber_entity/IceHolder/I = new prefab(where)
 	I.MyFirewall = src
+	MyIces += I
 
 /obj/machinery/power/apc/proc/ScanAreaRevealXYZOfRunners(list/arguments)
 	. = 0
